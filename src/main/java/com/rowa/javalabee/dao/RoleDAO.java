@@ -47,4 +47,26 @@ public class RoleDAO {
             e.printStackTrace();
         }
     }
+    public Role findById(long id) {
+        String sql = "SELECT * FROM roles WHERE id = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Role role = new Role();
+                    role.setId(rs.getLong("id"));
+                    role.setName(rs.getString("name"));
+                    role.setCanEditMovies(rs.getBoolean("can_edit_movies"));
+                    return role;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

@@ -36,6 +36,30 @@
     </c:forEach>
     </tbody>
 </table>
+<h2>Добавить нового пользователя</h2>
+<form action="${pageContext.request.contextPath}/users" method="post">
+    <label for="firstName">Имя:</label><br>
+    <input type="text" id="firstName" name="firstName" required><br>
+
+    <label for="lastName">Фамилия:</label><br>
+    <input type="text" id="lastName" name="lastName" required><br>
+
+    <label for="phone">Телефон:</label><br>
+    <input type="text" id="phone" name="phone"><br>
+
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email"><br>
+
+    <label for="roleId">Роль:</label><br>
+    <select id="roleId" name="roleId" required>
+        <c:forEach var="role" items="${roles}">
+            <option value="${role.id}">${role.name}</option>
+        </c:forEach>
+    </select><br><br>
+
+    <button type="submit">Добавить пользователя</button>
+</form>
+<hr>
 <jsp:include page="/jspf/footer.jsp" />
 </body>
 <style>

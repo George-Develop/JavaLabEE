@@ -48,4 +48,22 @@ public class UserDAO {
 
         return users;
     }
+    public void save(User user) {
+        String sql = "INSERT INTO users (first_name, last_name, phone, email, role_id) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, user.getFirstName());
+            stmt.setString(2, user.getLastName());
+            stmt.setString(3, user.getPhone());
+            stmt.setString(4, user.getEmail());
+            stmt.setLong(5, user.getRoleId());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
