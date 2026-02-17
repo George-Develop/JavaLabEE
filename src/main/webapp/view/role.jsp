@@ -28,6 +28,16 @@
     </c:forEach>
     </tbody>
 </table>
+<h2>Добавить новую роль</h2>
+<form action="${pageContext.request.contextPath}/roles" method="post">
+    <label for="name">Название роли:</label><br>
+    <input type="text" id="name" name="name" required><br>
+
+    <label for="canEditMovies">Может редактировать фильмы:</label>
+    <input type="checkbox" id="canEditMovies" name="canEditMovies"><br><br>
+
+    <button type="submit">Добавить роль</button>
+</form>
 <jsp:include page="/jspf/footer.jsp" />
 </body>
 <style>

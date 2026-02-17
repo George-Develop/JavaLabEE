@@ -33,7 +33,24 @@
         </tr>
     </c:forEach>
     </tbody>
+
 </table>
+<h2>Добавить новый фильм</h2>
+<form action="${pageContext.request.contextPath}/movies" method="post">
+    <label for="title">Название:</label><br>
+    <input type="text" id="title" name="title" required><br>
+
+    <label for="genre">Жанр:</label><br>
+    <input type="text" id="genre" name="genre" required><br>
+
+    <label for="releaseYear">Год выпуска:</label><br>
+    <input type="number" id="releaseYear" name="releaseYear" required><br>
+
+    <label for="description">Описание:</label><br>
+    <textarea id="description" name="description" rows="3"></textarea><br><br>
+
+    <button type="submit">Добавить фильм</button>
+</form>
 <jsp:include page="/jspf/footer.jsp" />
 </body>
 <style>
