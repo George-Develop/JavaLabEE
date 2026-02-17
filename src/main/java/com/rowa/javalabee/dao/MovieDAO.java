@@ -79,5 +79,52 @@ public class MovieDAO {
             e.printStackTrace();
         }
     }
+    public Movie findById(long id) {
+        String sql = "SELECT m.*, u.id as u_id, u.first_name, u.last_name, u.phone, u.email, " +
+                "r.id as r_id, r.name, r.can_edit_movies " +
+                "FROM movies m " +
+                "JOIN users u ON m.added_by = u.id " +
+                "JOIN roles r ON u.role_id = r.id " +
+                "WHERE m.id = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+            stmt.setLong(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Role role = new Role(rs.getLong("r_id"), rs.getString("name"), rs.getBoolean("can_edit_movies"));
+                    User user = new User(rs.getLong("u_id"), rs.getString("first_name"), rs.getString("last_name"),
+                            rs.getString("phone"), rs.getString("email"), role);
+                    return new Movie(rs.getLong("id"), rs.getString("title"), user,
+                            rs.getString("genre"), rs.getInt("release_year"), rs.getString("description"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void update(Movie movie) {
+        String sql = "UPDATE movies SET title=?, genre=?, release_year=?, description=? WHERE id=?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, movie.getTitle());
+            stmt.setString(2, movie.getGenre());
+            stmt.setInt(3, movie.getReleaseYear());
+            stmt.setString(4, movie.getDescription());
+            stmt.setLong(5, movie.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    public void delete(long id) {
+        String sql = "DELETE FROM movies WHERE id=?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
 }

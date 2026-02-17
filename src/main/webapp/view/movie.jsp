@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
     <title>Список фильмов</title>
 </head>
 <body>
@@ -19,6 +19,7 @@
         <th>Год выпуска</th>
         <th>Описание</th>
         <th>Добавил</th>
+        <th>Действия</th>
     </tr>
     </thead>
     <tbody>
@@ -29,9 +30,16 @@
             <td>${movie.genre}</td>
             <td>${movie.releaseYear}</td>
             <td>${movie.description}</td>
-            <td>${movie.addedBy.firstName} ${movie.addedBy.lastName}</td> <%-- Предполагается, что у User есть firstName и lastName --%>
+            <td>${movie.addedBy.firstName} ${movie.addedBy.lastName}</td>
+            <td>
+                <a href="${pageContext.request.contextPath}/movies?action=edit&id=${movie.id}">Редактировать</a>
+                |
+                <a href="${pageContext.request.contextPath}/movies?action=delete&id=${movie.id}"
+                   onclick="return confirm('Вы уверены, что хотите удалить фильм?');">Удалить</a>
+            </td>
         </tr>
     </c:forEach>
+
     </tbody>
 
 </table>
@@ -64,7 +72,7 @@
         text-align: left;
     }
     th {
-        background-color: #f2f2f2;
+        background-color: #4547e6;
     }
 </style>
 </html>

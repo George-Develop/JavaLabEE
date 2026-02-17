@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
     <title>Список пользователей</title>
 </head>
 <body>
@@ -20,6 +20,7 @@
         <th>Email</th>
         <th>ID роли</th>
         <th>Роль</th>
+        <th>Действия</th>
     </tr>
     </thead>
     <tbody>
@@ -31,9 +32,15 @@
             <td>${user.phone}</td>
             <td>${user.email}</td>
             <td>${user.roleId}</td>
-            <td>${user.role.name}</td>  <%-- Предполагается, что у Role есть поле name --%>
+            <td>${user.role.name}</td>
+            <td>
+                <a href="${pageContext.request.contextPath}/users?action=edit&id=${user.id}">Редактировать</a> |
+                <a href="${pageContext.request.contextPath}/users?action=delete&id=${user.id}"
+                   onclick="return confirm('Вы уверены, что хотите удалить пользователя?');">Удалить</a>
+            </td>
         </tr>
     </c:forEach>
+
     </tbody>
 </table>
 <h2>Добавить нового пользователя</h2>
@@ -73,7 +80,7 @@
         text-align: left;
     }
     th {
-        background-color: #f2f2f2;
+        background-color: #4547e6;
     }
 </style>
 </html>

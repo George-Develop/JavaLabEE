@@ -66,4 +66,49 @@ public class UserDAO {
         }
     }
 
+    public User findById(long id) {
+        String sql = "SELECT u.*, r.id as r_id, r.name, r.can_edit_movies " +
+                "FROM users u LEFT JOIN roles r ON u.role_id=r.id WHERE u.id=?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Role role = new Role(rs.getLong("r_id"), rs.getString("name"), rs.getBoolean("can_edit_movies"));
+                    return new User(rs.getLong("id"), rs.getString("first_name"), rs.getString("last_name"),
+                            rs.getString("phone"), rs.getString("email"), role);
+                }
+            }
+
+        } catch (SQLException e) { e.printStackTrace(); }
+        return null;
+    }
+
+    public void update(User user) {
+        String sql = "UPDATE users SET first_name=?, last_name=?, phone=?, email=?, role_id=? WHERE id=?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, user.getFirstName());
+            stmt.setString(2, user.getLastName());
+            stmt.setString(3, user.getPhone());
+            stmt.setString(4, user.getEmail());
+            stmt.setLong(5, user.getRoleId());
+            stmt.setLong(6, user.getId());
+            stmt.executeUpdate();
+
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    public void delete(long id) {
+        String sql = "DELETE FROM users WHERE id=?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
 }

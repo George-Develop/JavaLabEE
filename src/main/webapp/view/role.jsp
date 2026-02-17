@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
     <title>Список ролей</title>
 </head>
 <body>
@@ -16,6 +16,7 @@
         <th>ID</th>
         <th>Название</th>
         <th>Может редактировать фильмы</th>
+        <th>Действия</th>
     </tr>
     </thead>
     <tbody>
@@ -24,8 +25,14 @@
             <td>${role.id}</td>
             <td>${role.name}</td>
             <td>${role.canEditMovies ? "Да" : "Нет"}</td>
+            <td>
+                <a href="${pageContext.request.contextPath}/roles?action=edit&id=${role.id}">Редактировать</a> |
+                <a href="${pageContext.request.contextPath}/roles?action=delete&id=${role.id}"
+                   onclick="return confirm('Вы уверены, что хотите удалить роль?');">Удалить</a>
+            </td>
         </tr>
     </c:forEach>
+
     </tbody>
 </table>
 <h2>Добавить новую роль</h2>
@@ -51,7 +58,7 @@
         text-align: left;
     }
     th {
-        background-color: #f2f2f2;
+        background-color: #4547e6;
     }
 </style>
 </html>

@@ -69,4 +69,28 @@ public class RoleDAO {
         return null;
     }
 
+    public void update(Role role) {
+        String sql = "UPDATE roles SET name=?, can_edit_movies=? WHERE id=?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, role.getName());
+            stmt.setBoolean(2, role.getCanEditMovies());
+            stmt.setLong(3, role.getId());
+            stmt.executeUpdate();
+
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    public void delete(long id) {
+        String sql = "DELETE FROM roles WHERE id=?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+
 }

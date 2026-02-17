@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name="users",value="/users")
+@WebServlet(name="users", value="/users")
 public class UserServlet extends HttpServlet {
 
     private final UserDAO userDAO = new UserDAO();
@@ -23,33 +23,46 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        String idStr = request.getParameter("id");
+
+        if ("edit".equals(action) && idStr != null) {
+            long id = Long.parseLong(idStr);
+            User user = userDAO.findById(id);
+            List<Role> roles = roleDAO.findAll();
+            request.setAttribute("user", user);
+            request.setAttribute("roles", roles);
+            request.getRequestDispatcher("/view/edit_user.jsp").forward(request, response);
+            return;
+        }
+
+        if ("delete".equals(action) && idStr != null) {
+            long id = Long.parseLong(idStr);
+            userDAO.delete(id);
+            response.sendRedirect(request.getContextPath() + "/users");
+            return;
+        }
+
         List<User> users = userDAO.findAll();
-        List<Role> roles = roleDAO.findAll(); // для формы добавления
+        List<Role> roles = roleDAO.findAll();
         request.setAttribute("users", users);
         request.setAttribute("roles", roles);
-
         request.getRequestDispatcher("/view/user.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Получаем параметры из формы
+        String idStr = request.getParameter("id");
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
-        String roleIdStr = request.getParameter("roleId");
+        long roleId = Long.parseLong(request.getParameter("roleId"));
 
-        long roleId = 0;
-        try {
-            roleId = Long.parseLong(roleIdStr);
-        } catch (NumberFormatException e) {
-            e.printStackTrace(); // или обработка ошибки
-        }
-
-        Role role = roleDAO.findById(roleId); // метод должен возвращать Role по ID
+        Role role = roleDAO.findById(roleId);
 
         User user = new User();
+        if (idStr != null && !idStr.isEmpty()) user.setId(Long.parseLong(idStr));
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setPhone(phone);
@@ -57,9 +70,11 @@ public class UserServlet extends HttpServlet {
         user.setRole(role);
         user.setRoleId(role.getId());
 
-        userDAO.save(user); // метод save должен быть реализован
+        if (user.getId() > 0) userDAO.update(user);
+        else userDAO.save(user);
 
         response.sendRedirect(request.getContextPath() + "/users");
     }
 }
+
 
